@@ -1,0 +1,148 @@
+Initial matrix...
+    0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15
+   16   17   18   19   20   21   22   23   24   25   26   27   28   29   30   31
+   32   33   34   35   36   37   38   39   40   41   42   43   44   45   46   47
+   48   49   50   51   52   53   54   55   56   57   58   59   60   61   62   63
+   64   65   66   67   68   69   70   71   72   73   74   75   76   77   78   79
+   80   81   82   83   84   85   86   87   88   89   90   91   92   93   94   95
+   96   97   98   99  100  101  102  103  104  105  106  107  108  109  110  111
+  112  113  114  115  116  117  118  119  120  121  122  123  124  125  126  127
+
+Idx 0 idy : 0 id : 0
+Idx 0 idy : 1 id : 1
+Idx 1 idy : 0 id : 16
+Idx 1 idy : 1 id : 17
+Idx 2 idy : 0 id : 32
+Idx 3 idy : 0 id : 48
+Idx 2 idy : 1 id : 33
+Idx 4 idy : 0 id : 64
+Idx 5 idy : 0 id : 80
+Idx 3 idy : 1 id : 49
+Idx 6 idy : 0 id : 96
+Idx 7 idy : 0 id : 112
+Idx 4 idy : 1 id : 65
+Idx 5 idy : 1 id : 81
+Idx 6 idy : 1 id : 97
+Idx 7 idy : 1 id : 113
+Idx 0 idy : 12 id : 12
+Idx 1 idy : 12 id : 28
+Idx 0 idy : 13 id : 13
+Idx 2 idy : 12 id : 44
+Idx 3 idy : 12 id : 60
+Idx 1 idy : 13 id : 29
+Idx 4 idy : 12 id : 76
+Idx 5 idy : 12 id : 92
+Idx 2 idy : 13 id : 45
+Idx 6 idy : 12 id : 108
+Idx 7 idy : 12 id : 124
+Idx 3 idy : 13 id : 61
+Idx 4 idy : 13 id : 77
+Idx 5 idy : 13 id : 93
+Idx 6 idy : 13 id : 109
+Idx 7 idy : 13 id : 125
+Idx 0 idy : 8 id : 8
+Idx 1 idy : 8 id : 24
+Idx 0 idy : 9 id : 9
+Idx 2 idy : 8 id : 40
+Idx 3 idy : 8 id : 56
+Idx 1 idy : 9 id : 25
+Idx 4 idy : 8 id : 72
+Idx 5 idy : 8 id : 88
+Idx 6 idy : 8 id : 104
+Idx 7 idy : 8 id : 120
+Idx 2 idy : 9 id : 41
+Idx 3 idy : 9 id : 57
+Idx 4 idy : 9 id : 73
+Idx 5 idy : 9 id : 89
+Idx 6 idy : 9 id : 105
+Idx 7 idy : 9 id : 121
+Idx 0 idy : 2 id : 2
+Idx 0 idy : 3 id : 3
+Idx 1 idy : 2 id : 18
+Idx 2 idy : 2 id : 34
+Idx 1 idy : 3 id : 19
+Idx 3 idy : 2 id : 50
+Idx 4 idy : 2 id : 66
+Idx 5 idy : 2 id : 82
+Idx 6 idy : 2 id : 98
+Idx 7 idy : 2 id : 114
+Idx 2 idy : 3 id : 35
+Idx 3 idy : 3 id : 51
+Idx 4 idy : 3 id : 67
+Idx 5 idy : 3 id : 83
+Idx 6 idy : 3 id : 99
+Idx 7 idy : 3 id : 115
+Idx 0 idy : 6 id : 6
+Idx 1 idy : 6 id : 22
+Idx 2 idy : 6 id : 38
+Idx 3 idy : 6 id : 54
+Idx 4 idy : 6 id : 70
+Idx 5 idy : 6 id : 86
+Idx 6 idy : 6 id : 102
+Idx 7 idy : 6 id : 118
+Idx 0 idy : 7 id : 7
+Idx 1 idy : 7 id : 23
+Idx 2 idy : 7 id : 39
+Idx 3 idy : 7 id : 55
+Idx 4 idy : 7 id : 71
+Idx 5 idy : 7 id : 87
+Idx 6 idy : 7 id : 103
+Idx 7 idy : 7 id : 119
+Idx 0 idy : 14 id : 14
+Idx 0 idy : 15 id : 15
+Idx 1 idy : 14 id : 30
+Idx 2 idy : 14 id : 46
+Idx 1 idy : 15 id : 31
+Idx 3 idy : 14 id : 62
+Idx 4 idy : 14 id : 78
+Idx 5 idy : 14 id : 94
+Idx 6 idy : 14 id : 110
+Idx 7 idy : 14 id : 126
+Idx 2 idy : 15 id : 47
+Idx 3 idy : 15 id : 63
+Idx 4 idy : 15 id : 79
+Idx 5 idy : 15 id : 95
+Idx 6 idy : 15 id : 111
+Idx 7 idy : 15 id : 127
+Idx 0 idy : 4 id : 4
+Idx 1 idy : 4 id : 20
+Idx 2 idy : 4 id : 36
+Idx 3 idy : 4 id : 52
+Idx 4 idy : 4 id : 68
+Idx 5 idy : 4 id : 84
+Idx 6 idy : 4 id : 100
+Idx 7 idy : 4 id : 116
+Idx 0 idy : 5 id : 5
+Idx 1 idy : 5 id : 21
+Idx 2 idy : 5 id : 37
+Idx 3 idy : 5 id : 53
+Idx 4 idy : 5 id : 69
+Idx 5 idy : 5 id : 85
+Idx 6 idy : 5 id : 101
+Idx 7 idy : 5 id : 117
+Idx 0 idy : 10 id : 10
+Idx 1 idy : 10 id : 26
+Idx 2 idy : 10 id : 42
+Idx 3 idy : 10 id : 58
+Idx 4 idy : 10 id : 74
+Idx 5 idy : 10 id : 90
+Idx 6 idy : 10 id : 106
+Idx 7 idy : 10 id : 122
+Idx 0 idy : 11 id : 11
+Idx 1 idy : 11 id : 27
+Idx 2 idy : 11 id : 43
+Idx 3 idy : 11 id : 59
+Idx 4 idy : 11 id : 75
+Idx 5 idy : 11 id : 91
+Idx 6 idy : 11 id : 107
+Idx 7 idy : 11 id : 123
+Result traspose...
+    0   16   32   48   64   80   96  112    0    1    2    3    4    5    6    7
+    1   17   33   49   65   81   97  113   16   17   18   19   20   21   22   23
+    2   18   34   50   66   82   98  114    0    0   34   35    0    0   38   39
+    3   19   35   51   67   83   99  115    0    0   50   51    0    0   54   55
+    4   20   36   52   68   84  100  116   64   65   66   67    0    0   70   71
+    5   21   37   53   69   85  101  117   80   81   82   83    0    0   86   87
+    6   22   38   54   70   86  102  118    0    0   98   99    0    0  102  103
+    7   23   39   55   71   87  103  119    0    0  114  115    0    0  118  119
+

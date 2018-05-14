@@ -1,0 +1,68 @@
+1)
+
+Arquitecturas Híbridas.
+
+Esencialmente son formas más o menos sinónimos de nombrar a las arquitecturas de memoria compartida...
+
+Shared memory architecture SMA,
+Symmetric multiprocessor SMP,
+Uniform memory architecture UMA
+
+Distribuida...
+
+Distributed memory architecture DMA,
+Non-Uniform memory architecture NUMA,
+NO remote memory architecture NRMA
+
+Ojo, son parecidas, para describir estos modelos pero cada una tiene algunas particularidades,
+así que no son exactamente lo mismo, aunque parecido.
+
+
+2)
+
+Correcto.
+
+To benefit from a multiprocessor an application must be concurrent...
+
+Si el programa facilita que su código sea paralelizable es decir las instrucciones
+del programa se puedan ejecutar de forma independiente el programa optimizará de
+mejor manera la parelización del multiprocesador.
+
+Con concurrencia podemos conseguir la independencia entre las instrucciones del programa...
+
+
+3)
+
+Las variables de iteración (los i y j tipicos dentro del bucle) son especiales ya
+que al definir el for dentro de un parallel for, omp distribuye el indice entre
+los disitntos hilos. Puedes considerar que los indices de los bucles son privados,
+pero es algo más. En cuanto a las variables externas, si, por defecto son publicas
+(se comparten entre los threads).
+
+Si echas un vistazo a las trasparencias de clase, hay una en la que indico como
+decirle explicitamente a una sección paralela (sea parallel for o no) que variables
+son públicas y cuales privadas. No lo vimos en clase por falta de tiempo.
+
+Dentro de una sección paralela, el valor devuelto por omp_get_num_threads() es el
+número de hilos en ejecución en dicha sección paralela. Este número de hilos lo determina
+omp teniendo en cuanta varios factores (el procesador que tienes, su carga actual, los
+requisitos funcionales y de recursos de la sección paralela, etc.). Distintas secciones críticas
+pueden tener distinto número de threads pero habitualmente, omp lanza tantos hilos
+como nucleos lógicos tenga el procesador.
+
+
+4)
+
+Es lo que se llama false sharing. Cuando definimos sum[NTHREADS], reservamos memoria
+para que cada hilo escriba en su propia porción de la memoria, sin interferencias.
+Pero resulta que ese array es cacheado y por como funciona la cache L1, cuando cada thread escribe,
+la cache L1 tiene que invalidar el resto de copias (la que tiene del array cada uno de los threads)
+y eso penaliza el rendimiento. (Paralelismo en la jerarquía de memoria) Coherencia de cachés...
+
+Se llama false sharing por que a pesar que se diseña el array para que los threads
+no comparta información, por como funciona la cache al final se comparte el array a
+pesar de que cada thread escribe en una zona distinta de memoria (false sharing).
+
+Para evitar esto, creamos una matriz en lugar de un array, esta matriz tendrá un tamaño
+de fila como el tamaño de la cache y por lo tanto cada cache L1 solo tiene una de las
+filas de la matriz. Cada thread escribe solo en una fila y eliminamos el false sharing.
