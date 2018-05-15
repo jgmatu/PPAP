@@ -7,8 +7,8 @@
 
 #define THREADS 32
 
-#define WIDTH 8192
-#define HEIGHT 8192
+#define WIDTH 4
+#define HEIGHT 2
 
 // See times between copy and traspose and realize the same operation
 // with shared memory.
@@ -24,21 +24,21 @@ __global__ void copy(int *src, int *dest)
       int idy = blockIdx.y * blockDim.y + threadIdx.y;
       if (idx >= WIDTH || idy >= HEIGHT) return;
 
-      dest[idx * HEIGHT + idy] = src[idx * HEIGHT + idy]; // Copio tal cual con los mismos indices facil... :)
+      dest[idy * WIDTH + idx] = src[idy * WIDTH + idx]; // Copio tal cual con los mismos indices facil... :)
 }
 
 __global__ void copy_shared(int *src, int *dst)
 {
-      __shared__ int mem[THREADS][THREADS];
+      __shared__ int mem[THREADS][THREADS + 1];
 
       int idx = blockIdx.x * blockDim.x + threadIdx.x;
       int idy = blockIdx.y * blockDim.y + threadIdx.y;
       if (idx >= WIDTH || idy >= HEIGHT) return;
 
-      mem[threadIdx.x][threadIdx.y] = src[idx * HEIGHT + idy]; // Añado el valor en la memoria compartida...
+      mem[threadIdx.x][threadIdx.y] = src[idy * WIDTH + idx]; // Añado el valor en la memoria compartida...
       __syncthreads();
 
-      dst[idx * HEIGHT + idy] = mem[threadIdx.x][threadIdx.y]; // Añado en su posicion natural el valor de la memoria
+      dst[idy * WIDTH + idx] = mem[threadIdx.x][threadIdx.y]; // Añado en su posicion natural el valor de la memoria
                                                               // compartida...
 }
 
@@ -58,12 +58,21 @@ __global__ void traspose_shared(int *src, int *dst)
       int idy = blockIdx.y * blockDim.y + threadIdx.y;
       if (idx >= WIDTH || idy >= HEIGHT) return;
 
-      __shared__ int mem[THREADS][THREADS];
-      mem[threadIdx.x][threadIdx.y] = src[idy * WIDTH + idx]; // Hago las posiciones traspuestas
+      __shared__ int mem[THREADS][THREADS + 1];
+      mem[threadIdx.x][threadIdx.y] = src[idx * HEIGHT + idy]; // Hago las posiciones traspuestas
                                                               // en la memoria compartida...
       __syncthreads();
-      dst[idx * HEIGHT + idy] = mem[threadIdx.x][threadIdx.y]; // Añado en su posicion natural el valor de la shared
+      dst[idy * WIDTH + idx] = mem[threadIdx.x][threadIdx.y]; // Añado en su posicion natural el valor de la shared
                                                                // que tiene el valor de la traspuesta....
+}
+
+__global__ void matrixAddPitch (int *a, int *b, int*c, int pitch) {
+
+	int idx = threadIdx.x + blockIdx.x * blockDim.x;
+	int idy = threadIdx.y + blockIdx.y * blockDim.y;
+	if (idx > pitch || idy > HEIGHT) return;
+
+	c[idy * pitch + idx] = a[idy * pitch + idx] + b[idy * pitch + idx];
 }
 
 unsigned long get_time()
@@ -94,37 +103,65 @@ void init(int *h_v) {
       }
 }
 
-void print_matrix(const int *matrix) {
+void print_matrix(const int *matrix, const int w, const int h) {
       fprintf(stdout, "%s\n", "Print matrix...");
-      for (int i = 0; i < HEIGHT; i++) {
-            for (int j = 0; j < WIDTH; ++j) {
-                  fprintf(stdout, "%5d", matrix[i * WIDTH + j]);
+      for (int i = 0; i < h; i++) {
+            for (int j = 0; j < w; ++j) {
+                  fprintf(stdout, "%5d", matrix[i * w + j]);
             }
             fprintf(stdout, "%s\n", "");
       }
       fprintf(stdout, "%s\n", "");
 }
 
-void print_traspose(const int *traspose) {
-      fprintf(stdout, "%s\n", "Print traspose...");
-      for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; ++j) {
-                  fprintf(stdout, "%5d", traspose[i * HEIGHT + j]);
-            }
-            fprintf(stdout, "%s\n", "");
-      }
-      fprintf(stdout, "%s\n", "");
-}
-
-int main(int argc, char const *argv[])
+void addPitch()
 {
+      int n = WIDTH * HEIGHT;
+
+      dim3 t (16, 16);
+      dim3 b ( (WIDTH - 1) / t.x + 1, (HEIGHT - 1) / t.y  + 1);
+      int *h_a, *h_b, *h_c;
+      int *d_a, *d_b, *d_c;
+      int size = sizeof(int) * n;
+      size_t pitch;
+
+      h_a = (int *) malloc (size);
+      h_b = (int *) malloc (size);
+      h_c = (int *) malloc (size);
+
+      for (int i = 0; i < n; i++) {
+            h_a[i] = i;
+            h_b[i] = i;
+      }
+
+      cudaMallocPitch(&d_a, &pitch, WIDTH * sizeof(int), HEIGHT);
+      cudaMallocPitch(&d_b, &pitch, WIDTH * sizeof(int), HEIGHT);
+      cudaMallocPitch(&d_c, &pitch, WIDTH * sizeof(int), HEIGHT);
+
+      cudaMemcpy2D (d_a, pitch, h_a, WIDTH * sizeof(int), WIDTH * sizeof(int), HEIGHT, cudaMemcpyHostToDevice);
+      cudaMemcpy2D (d_b, pitch, h_b, WIDTH * sizeof(int), WIDTH * sizeof(int), HEIGHT, cudaMemcpyHostToDevice);
+
+      matrixAddPitch <<<b, t>>> (d_a, d_b, d_c, pitch / sizeof(int));
+      cudaMemcpy2D (h_c, WIDTH * sizeof(int), d_c, pitch, WIDTH * sizeof(int), HEIGHT, cudaMemcpyDeviceToHost);
+
+      print_matrix(h_c, HEIGHT, WIDTH);
+
+      free(h_a);
+      free(h_b);
+      free(h_c);
+
+      cudaFree(d_a);
+      cudaFree(d_b);
+      cudaFree(d_c);
+}
+void traspose() {
       int *matrix = NULL;
       int *dev_matrix = NULL;
       int *dev_traspose = NULL;
 
       mi_malloc_int(&matrix, WIDTH * HEIGHT);
       init(matrix);
-//      print_matrix(matrix);
+      print_matrix(matrix, WIDTH, HEIGHT);
 
       cudaMalloc(&dev_matrix, sizeof(int) * WIDTH * HEIGHT);
       // &dst, size...
@@ -143,15 +180,19 @@ int main(int argc, char const *argv[])
 
       // ... START PARARELL CODE ...
       unsigned long now = get_time();
-      copy<<<b, t>>>(dev_matrix, dev_traspose);
-      // Call kernet << b ,  t >> (a , b);
+      traspose<<<b, t>>>(dev_matrix, dev_traspose);
+      // Call kernel << b ,  t >> (a , b);
       cudaMemcpy(matrix, dev_traspose, sizeof(int) * WIDTH * HEIGHT, cudaMemcpyDeviceToHost);
       // dest, src, size, cudaMemcpyDeviceToHost;
       fprintf(stdout, "Time : %lf ms\n", (get_time() - now)  / 1000000.0f);
       // ... END PARARELL CODE ...
-      
-//      print_traspose(matrix);
 
+      print_matrix(matrix, HEIGHT, WIDTH);
       fprintf(stdout, "Num Blocks (x:%d y:%d)\n", b.x, b.y);
+}
+
+int main(int argc, char const *argv[])
+{
+      traspose();
       return 0;
 }

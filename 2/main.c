@@ -23,7 +23,7 @@ unsigned long get_time()
 }
 
 double getPI() {
-      double sum;
+      double sum = 0.0;
       double step = 1.0 / (double) n;
 
       #pragma omp parallel for reduction (+:sum) num_threads(NTHREADS)
@@ -40,7 +40,7 @@ void showTimesOpenMP ()
       unsigned N = 10;
       unsigned long before = get_time();
 
-      #pragma omp parallel for num_threads(NTHREADS)
+      #pragma omp parallel for reduction (+:total) num_threads(NTHREADS)
       for (unsigned i = 0; i < N; ++i) {
             fprintf(stderr, "%2.20lf\n", getPI());
             total += (get_time() - before) / 1000000.0;
